@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pigment Mixer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        #colorPreview {
+            width: 100%;
+            height: 100px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+        .pigment-control {
+            margin-bottom: 15px;
+        }
+        .pigment-label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .color-swatch {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            margin-left: 10px;
+            border: 1px solid #ccc;
+        }
+        input[type="range"] {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pigment Mixer</h1>
+    <div id="colorPreview"></div>
+    <div id="pigmentControls"></div>
+
+    <script>
+        const pigments = [
+            { name: 'Red', color: '#FF0000' },
+            { name: 'Blue', color: '#0000FF' },
+            { name: 'Yellow', color: '#FFFF00' },
+            { name: 'Green', color: '#00FF00' },
+            { name: 'Purple', color: '#800080' },
+            { name: 'Orange', color: '#FFA500' },
+            { name: 'Brown', color: '#A52A2A' },
+            { name: 'Pink', color: '#FFC0CB' },
+            { name: 'Black', color: '#000000' },
+            { name: 'White', color: '#FFFFFF' }
+        ];
+
+        const colorPreview = document.getElementById('colorPreview');
+        const pigmentControls = document.getElementById('pigmentControls');
+
+        let amounts = new Array(pigments.length).fill(0);
+
+        function createPigmentControl(pigment, index) {
+            const control = document.createElement('div');
+            control.className = 'pigment-control';
+
+            const label = document.createElement('div');
+            label.className = 'pigment-label';
+            label.innerHTML = `
+                ${pigment.name}
+                <span class="color-swatch" style="background-color: ${pigment.color};"></span>
+            `;
+
+            const slider = document.createElement('input');
+            slider.type = 'range';
+            slider.min = 0;
+            slider.max = 100;
+            slider.value = 0;
+            slider.addEventListener('input', (e) => {
+                amounts[index] = parseInt(e.target.value);
+                updateMixedColor();
+            });
+
+            control.appendChild(label);
+            control.appendChild(slider);
+            return control;
+        }
+
+        function updateMixedColor() {
+            let r = 0, g = 0, b = 0, total = 0;
+
+            amounts.forEach((amount, index) => {
+                const [pigmentR, pigmentG, pigmentB] = pigments[index].color.match(/\w\w/g).map(hex => parseInt(hex, 16));
+                r += pigmentR * amount;
+                g += pigmentG * amount;
+                b += pigmentB * amount;
+                total += amount;
+            });
+
+            // Special case for yellow + blue = green
+            const yellowAmount = amounts[2];
+            const blueAmount = amounts[1];
+            if (yellowAmount > 0 && blueAmount > 0) {
+                const greenAmount = Math.min(yellowAmount, blueAmount);
+                g += greenAmount * 255;
+                r -= greenAmount * 255 / 2;
+                b -= greenAmount * 255 / 2;
+            }
+
+            if (total > 0) {
+                r = Math.round(r / total);
+                g = Math.round(g / total);
+                b = Math.round(b / total);
+            } else {
+                r = g = b = 255; // White if no pigments are selected
+            }
+
+            const mixedColor = `rgb(${r}, ${g}, ${b})`;
+            colorPreview.style.backgroundColor = mixedColor;
+        }
+
+        pigments.forEach((pigment, index) => {
+            const control = createPigmentControl(pigment, index);
+            pigmentControls.appendChild(control);
+        });
+
+        updateMixedColor();
+    </script>
+</body>
+</html>
