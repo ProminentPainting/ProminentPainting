@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pigment Mixer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        #colorPreview {
+            width: 100%;
+            height: 100px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+        .pigment-control {
+            margin-bottom: 15px;
+        }
+        .pigment-label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .color-swatch {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            margin-left: 10px;
+            border: 1px solid #ccc;
+        }
+        input[type="range"] {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pigment Mixer</h1>
+    <div id="colorPreview"></div>
+    <div id="pigmentControls"></div>
+
+    <script>
+        const pigments = [
+            { name: 'Cadmium Red', color: '#E30022' },
+            { name: 'Ultramarine Blue', color: '#0033AA' },
+            { name: 'Cadmium Yellow', color: '#FFF600' },
+            { name: 'Phthalo Green', color: '#123524' },
+            { name: 'Quinacridone Magenta', color: '#8E4585' },
+            { name: 'Burnt Sienna', color: '#E97451' },
+            { name: 'Raw Umber', color: '#826644' },
+            { name: 'Titanium White', color: '#FFFFFF' },
+            { name: 'Ivory Black', color: '#1B1B1B' },
+            { name: 'Yellow Ochre', color: '#CB9D06' }
+        ];
+
+        const colorPreview = document.getElementById('colorPreview');
+        const pigmentControls = document.getElementById('pigmentControls');
+
+        let amounts = new Array(pigments.length).fill(0);
+
+        function createPigmentControl(pigment, index) {
+            const control = document.createElement('div');
+            control.className = 'pigment-control';
+
+            const label = document.createElement('div');
+            label.className = 'pigment-label';
+            label.innerHTML = `
+                ${pigment.name}
+                <span class="color-swatch" style="background-color: ${pigment.color};"></span>
+            `;
+
+            const slider = document.createElement('input');
+            slider.type = 'range';
+            slider.min = 0;
+            slider.max = 100;
+            slider.value = 0;
+            slider.addEventListener('input', (e) => {
+                amounts[index] = parseInt(e.target.value);
+                updateMixedColor();
+            });
+
+            control.appendChild(label);
+            control.appendChild(slider);
+            return control;
+        }
+
+        function updateMixedColor() {
+            let r = 0, g = 0, b = 0, total = 0;
+
+            amounts.forEach((amount, index) => {
+                const [pigmentR, pigmentG, pigmentB] = pigments[index].color.match(/\w\w/g).map(hex => parseInt(hex, 16));
+                r += pigmentR * amount;
+                g += pigmentG * amount;
+                b += pigmentB * amount;
+                total += amount;
+            });
+
+            if (total > 0) {
+                r = Math.round(r / total);
+                g = Math.round(g / total);
+                b = Math.round(b / total);
+            } else {
+                r = g = b = 255; // White if no pigments are selected
+            }
+
+            const mixedColor = `rgb(${r}, ${g}, ${b})`;
+            colorPreview.style.backgroundColor = mixedColor;
+        }
+
+        pigments.forEach((pigment, index) => {
+            const control = createPigmentControl(pigment, index);
+            pigmentControls.appendChild(control);
+        });
+
+        updateMixedColor();
+    </script>
+</body>
+</html>
