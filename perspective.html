@@ -1,101 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Changing Perspective in Landscape Painting</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0;
-            padding: 20px;
-            background-color: #87CEEB;
-        }
-        .canvas-container {
-            position: relative;
-            width: 80%;
-            max-width: 800px;
-            border: 1px solid #ccc;
-        }
-        canvas {
-            width: 100%;
-            height: 400px;
-            background-color: #f0f0f0;
-        }
-        .slider-container {
-            margin-top: 20px;
-            width: 80%;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Perspective View</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+  </style>
 </head>
 <body>
-    <h1>Changing Perspective in Landscape Painting</h1>
-    <p>Use the slider below to change the perspective of the landscape.</p>
-    <div class="canvas-container">
-        <canvas id="landscapeCanvas"></canvas>
-    </div>
-    <div class="slider-container">
-        <input type="range" id="perspectiveSlider" min="0" max="100" value="50">
-    </div>
+  <div id="canvas-container">
+    <canvas id="canvas" width="800" height="600"></canvas>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    // Create the scene, camera, and renderer
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({
+      canvas: document.getElementById('canvas'),
+      antialias: true
+    });
 
-    <script>
-        const canvas = document.getElementById('landscapeCanvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = canvas.clientWidth;
-        canvas.height = canvas.clientHeight;
+    // Create the mountains
+    const mountainGeometry = new THREE.PlaneGeometry(100, 100);
+    const mountainMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const mountainMesh = new THREE.Mesh(mountainGeometry, mountainMaterial);
+    mountainMesh.position.set(0, 0, -50);
+    scene.add(mountainMesh);
 
-        const slider = document.getElementById('perspectiveSlider');
+    // Create the street
+    const streetGeometry = new THREE.PlaneGeometry(100, 100);
+    const streetMaterial = new THREE.MeshBasicMaterial({ color: 0x666666 });
+    const streetMesh = new THREE.Mesh(streetGeometry, streetMaterial);
+    streetMesh.position.set(0, 0, 0);
+    scene.add(streetMesh);
 
-        function drawLandscape(perspective) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Create the light
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(0, 0, 100);
+    scene.add(light);
 
-            const horizonY = canvas.height / 2;
+    // Animate the scene
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+    animate();
 
-            // Draw sky
-            ctx.fillStyle = '#87CEEB';
-            ctx.fillRect(0, 0, canvas.width, horizonY);
-
-            // Draw ground
-            ctx.fillStyle = '#228B22';
-            ctx.fillRect(0, horizonY, canvas.width, canvas.height);
-
-            // Draw road
-            const roadWidthTop = 20 * (1 - perspective / 100);
-            const roadWidthBottom = 200 * (1 - perspective / 100);
-            ctx.beginPath();
-            ctx.moveTo((canvas.width - roadWidthTop) / 2, horizonY);
-            ctx.lineTo((canvas.width + roadWidthTop) / 2, horizonY);
-            ctx.lineTo((canvas.width + roadWidthBottom) / 2, canvas.height);
-            ctx.lineTo((canvas.width - roadWidthBottom) / 2, canvas.height);
-            ctx.closePath();
-            ctx.fillStyle = '#696969';
-            ctx.fill();
-
-            // Draw trees (as circles for simplicity)
-            const treeCount = 5;
-            for (let i = 0; i < treeCount; i++) {
-                const baseSize = 40;
-                const treeSize = baseSize * (1 - perspective / 100);
-                const treeX = canvas.width * (i + 1) / (treeCount + 1);
-                const treeY = horizonY - treeSize / 2;
-
-                ctx.beginPath();
-                ctx.arc(treeX, treeY, treeSize / 2, 0, 2 * Math.PI);
-                ctx.fillStyle = '#006400';
-                ctx.fill();
-            }
-        }
-
-        slider.addEventListener('input', (e) => {
-            const perspectiveValue = e.target.value;
-            drawLandscape(perspectiveValue);
-        });
-
-        // Initial draw
-        drawLandscape(slider.value);
-    </script>
+    // Handle mouse events to change the view
+    document.addEventListener('mousemove', (event) => {
+      const mouseX = event.clientX;
+      const mouseY = event.clientY;
+      camera.position.x = mouseX / window.innerWidth * 2 - 1;
+      camera.position.y = mouseY / window.innerHeight * 2 - 1;
+      camera.updateProjectionMatrix();
+    });
+  </script>
 </body>
 </html>
