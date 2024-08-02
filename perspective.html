@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Perspective in Painting</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="perspective-canvas" width="400" height="400"></canvas>
+  <script>
+    // Get the canvas element
+    const canvas = document.getElementById('perspective-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Set the canvas dimensions
+    canvas.width = 400;
+    canvas.height = 400;
+
+    // Define the perspective lines
+    const perspectiveLines = [
+      { x: 0, y: 0, z: 0 }, // vanishing point
+      { x: 200, y: 0, z: 0 }, // horizon line
+      { x: 0, y: 200, z: 0 }, // vertical line
+    ];
+
+    // Draw the perspective lines
+    ctx.beginPath();
+    ctx.moveTo(perspectiveLines[0].x, perspectiveLines[0].y);
+    ctx.lineTo(perspectiveLines[1].x, perspectiveLines[1].y);
+    ctx.stroke();
+
+    // Draw a simple cube to demonstrate perspective
+    ctx.beginPath();
+    ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+    ctx.fillRect(50, 50, 100, 100); // front face
+    ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
+    ctx.fillRect(150, 50, 100, 100); // right face
+    ctx.fillStyle = 'rgba(0, 0, 255, 0.5)';
+    ctx.fillRect(50, 150, 100, 100); // back face
+    ctx.fillStyle = 'rgba(255, 255, 0, 0.5)';
+    ctx.fillRect(150, 150, 100, 100); // left face
+    ctx.fillStyle = 'rgba(255, 0, 255, 0.5)';
+    ctx.fillRect(50, 250, 100, 100); // top face
+    ctx.fillStyle = 'rgba(0, 255, 255, 0.5)';
+    ctx.fillRect(150, 250, 100, 100); // bottom face
+
+    // Add some depth cues (shading and shadow)
+    ctx.beginPath();
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.fillRect(50, 50, 100, 100); // front face shadow
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.fillRect(150, 50, 100, 100); // right face shadow
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.fillRect(50, 150, 100, 100); // back face shadow
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.fillRect(150, 150, 100, 100); // left face shadow
+
+    // Add some highlights (specular reflections)
+    ctx.beginPath();
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.arc(75, 75, 20, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.arc(225, 75, 20, 0, 2 * Math.PI);
+    ctx.fill();
+  </script>
+</body>
+</html>
