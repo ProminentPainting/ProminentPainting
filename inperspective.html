@@ -1,0 +1,145 @@
+<div id="perspective-grid-generator" style="font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+    <h2 style="text-align: center; color: #333;">Perspective Grid Generator</h2>
+    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+        <div>
+            <label for="gridType">Grid Type:</label>
+            <select id="gridType" onchange="updateGrid()">
+                <option value="onePoint">One Point</option>
+                <option value="twoPoint">Two Point</option>
+                <option value="threePoint">Three Point</option>
+            </select>
+        </div>
+        <div>
+            <label for="lineColor">Line Color:</label>
+            <input type="color" id="lineColor" value="#000000" onchange="updateGrid()">
+        </div>
+        <div>
+            <label for="lineOpacity">Line Opacity:</label>
+            <input type="range" id="lineOpacity" min="0" max="100" value="50" onchange="updateGrid()">
+        </div>
+    </div>
+    <div id="instructions" style="text-align: center; margin-bottom: 10px; font-style: italic;">
+        Click and drag to move the focal point (one-point perspective only).
+    </div>
+    <svg id="gridCanvas" width="500" height="500" style="border: 1px solid #ccc;"></svg>
+    <div style="text-align: center; margin-top: 10px;">
+        <button onclick="downloadSVG()" style="padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; background-color: #4CAF50; color: white;">Download SVG</button>
+    </div>
+</div>
+
+<script>
+    const svg = document.getElementById('gridCanvas');
+    const NS = "http://www.w3.org/2000/svg";
+    let focalPoint = { x: 250, y: 250 };
+    let isDragging = false;
+
+    function createLine(x1, y1, x2, y2, color, opacity) {
+        const line = document.createElementNS(NS, 'line');
+        line.setAttribute('x1', x1);
+        line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2);
+        line.setAttribute('y2', y2);
+        line.setAttribute('stroke', color);
+        line.setAttribute('stroke-width', '1');
+        line.setAttribute('stroke-opacity', opacity);
+        return line;
+    }
+
+    function updateGrid() {
+        svg.innerHTML = '';
+        const gridType = document.getElementById('gridType').value;
+        const color = document.getElementById('lineColor').value;
+        const opacity = document.getElementById('lineOpacity').value / 100;
+        const width = 500;
+        const height = 500;
+
+        // Horizon line
+        svg.appendChild(createLine(0, height/2, width, height/2, color, opacity));
+
+        if (gridType === 'onePoint') {
+            // Vertical lines
+            for (let x = 0; x <= width; x += 50) {
+                svg.appendChild(createLine(x, 0, x, height, color, opacity));
+            }
+
+            // Horizontal lines
+            for (let y = 0; y <= height; y += 50) {
+                svg.appendChild(createLine(0, y, width, y, color, opacity));
+            }
+
+            // One point perspective lines
+            for (let i = 0; i < 10; i++) {
+                svg.appendChild(createLine(0, i * height/10, focalPoint.x, focalPoint.y, color, opacity));
+                svg.appendChild(createLine(width, i * height/10, focalPoint.x, focalPoint.y, color, opacity));
+            }
+
+            // Draw focal point
+            const focalPointCircle = document.createElementNS(NS, 'circle');
+            focalPointCircle.setAttribute('cx', focalPoint.x);
+            focalPointCircle.setAttribute('cy', focalPoint.y);
+            focalPointCircle.setAttribute('r', '5');
+            focalPointCircle.setAttribute('fill', 'red');
+            svg.appendChild(focalPointCircle);
+        } else if (gridType === 'twoPoint') {
+            // Two point perspective lines (simplified)
+            for (let i = 0; i < 10; i++) {
+                svg.appendChild(createLine(i * width/10, 0, 0, height/2, color, opacity));
+                svg.appendChild(createLine(i * width/10, height, 0, height/2, color, opacity));
+                svg.appendChild(createLine(i * width/10, 0, width, height/2, color, opacity));
+                svg.appendChild(createLine(i * width/10, height, width, height/2, color, opacity));
+            }
+        } else if (gridType === 'threePoint') {
+            // Three point perspective lines (simplified)
+            for (let i = 1; i < 10; i++) {
+                svg.appendChild(createLine(0, i * height/10, width/2, 0, color, opacity));
+                svg.appendChild(createLine(width, i * height/10, width/2, 0, color, opacity));
+                svg.appendChild(createLine(0, i * height/10, width/2, height, color, opacity));
+                svg.appendChild(createLine(width, i * height/10, width/2, height, color, opacity));
+            }
+        }
+    }
+
+    function startDrag(e) {
+        if (document.getElementById('gridType').value === 'onePoint') {
+            isDragging = true;
+            updateFocalPoint(e);
+        }
+    }
+
+    function drag(e) {
+        if (isDragging) {
+            updateFocalPoint(e);
+        }
+    }
+
+    function endDrag() {
+        isDragging = false;
+    }
+
+    function updateFocalPoint(e) {
+        const rect = svg.getBoundingClientRect();
+        focalPoint.x = e.clientX - rect.left;
+        focalPoint.y = e.clientY - rect.top;
+        updateGrid();
+    }
+
+    function downloadSVG() {
+        const svgData = new XMLSerializer().serializeToString(svg);
+        const svgBlob = new Blob([svgData], {type:"image/svg+xml;charset=utf-8"});
+        const svgUrl = URL.createObjectURL(svgBlob);
+        const downloadLink = document.createElement("a");
+        downloadLink.href = svgUrl;
+        downloadLink.download = "perspective_grid.svg";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
+
+    svg.addEventListener('mousedown', startDrag);
+    svg.addEventListener('mousemove', drag);
+    svg.addEventListener('mouseup', endDrag);
+    svg.addEventListener('mouseleave', endDrag);
+
+    // Initialize the grid
+    updateGrid();
+</script>
