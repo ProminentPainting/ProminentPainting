@@ -1,0 +1,74 @@
+<style>
+    .golden-ratio-tool {
+        font-family: Arial, sans-serif;
+        max-width: 400px;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .golden-ratio-tool input, .golden-ratio-tool button {
+        width: 100%;
+        margin-bottom: 15px;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+    .golden-ratio-tool button {
+        background-color: #0073aa;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .golden-ratio-tool button:hover {
+        background-color: #005177;
+    }
+    .result {
+        margin-top: 15px;
+        line-height: 1.6;
+    }
+    .result p {
+        margin-bottom: 10px;
+    }
+    .highlight {
+        font-weight: bold;
+        color: #0073aa;
+    }
+</style>
+
+<div class="golden-ratio-tool">
+    <h3>Golden Ratio Calculator</h3>
+    <input type="number" id="inputNumber" placeholder="Enter a number">
+    <button onclick="calculateGoldenRatio()">Calculate Golden Ratio</button>
+    <div id="result" class="result"></div>
+</div>
+
+<script>
+function calculateGoldenRatio() {
+    const input = document.getElementById('inputNumber').value;
+    const goldenRatio = 1.618033988749895;
+    
+    if (input && !isNaN(input)) {
+        const number = parseFloat(input);
+        const result = (number * goldenRatio).toFixed(2);
+        const inverse = (number / goldenRatio).toFixed(2);
+        
+        let explanation = `
+            <p>You entered the number <span class="highlight">${number}</span>.</p>
+            <p>The golden ratio is approximately <span class="highlight">1:1.618</span>, also known as phi (φ).</p>
+            <p>When we multiply ${number} by the golden ratio:</p>
+            <p><span class="highlight">${number} × 1.618 ≈ ${result}</span></p>
+            <p>This means that ${result} is in the golden ratio to ${number}.</p>
+            <p>Conversely, when we divide ${number} by the golden ratio:</p>
+            <p><span class="highlight">${number} ÷ 1.618 ≈ ${inverse}</span></p>
+            <p>This means that ${number} is in the golden ratio to ${inverse}.</p>
+            <p>The golden ratio is often found in nature and used in art and design for its aesthetically pleasing proportions.</p>
+        `;
+        
+        document.getElementById('result').innerHTML = explanation;
+    } else {
+        document.getElementById('result').innerHTML = '<p>Please enter a valid number.</p>';
+    }
+}
+</script>
