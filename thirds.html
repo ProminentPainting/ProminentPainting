@@ -1,0 +1,57 @@
+<div id="ruleOfThirdsGenerator" style="font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;">
+    <h3 style="margin-top: 0; color: #333;">Rule of Thirds Grid Generator</h3>
+    <input type="text" id="imageUrl" placeholder="Enter image URL" style="width: 100%; padding: 5px; margin: 10px 0;">
+    <br>
+    <label for="gridColor">Grid Color:</label>
+    <input type="color" id="gridColor" value="#ffffff" style="margin: 10px 0;">
+    <br>
+    <button onclick="generateGrid()" style="margin: 10px 0; padding: 5px 10px; background-color: #0073aa; color: white; border: none; border-radius: 3px; cursor: pointer;">Generate Grid</button>
+    <div id="imageContainer" style="position: relative; max-width: 100%; margin-top: 20px;">
+        <img id="uploadedImage" alt="Uploaded image" style="max-width: 100%; display: none;">
+        <div id="gridOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></div>
+    </div>
+    <div id="guidance" style="margin-top: 20px; padding: 10px; background-color: #e9e9e9; border-radius: 5px;"></div>
+</div>
+
+<script>
+function generateGrid() {
+    const imageUrl = document.getElementById('imageUrl').value;
+    const image = document.getElementById('uploadedImage');
+    const gridOverlay = document.getElementById('gridOverlay');
+    const gridColor = document.getElementById('gridColor').value;
+
+    // Load the image
+    image.onload = function() {
+        image.style.display = 'block';
+        
+        // Create grid
+        const gridHtml = `
+            <div style="position: absolute; top: 33.33%; left: 0; right: 0; height: 1px; background-color: ${gridColor};"></div>
+            <div style="position: absolute; top: 66.66%; left: 0; right: 0; height: 1px; background-color: ${gridColor};"></div>
+            <div style="position: absolute; left: 33.33%; top: 0; bottom: 0; width: 1px; background-color: ${gridColor};"></div>
+            <div style="position: absolute; left: 66.66%; top: 0; bottom: 0; width: 1px; background-color: ${gridColor};"></div>
+        `;
+        gridOverlay.innerHTML = gridHtml;
+        
+        // Show guidance
+        showGuidance();
+    };
+
+    image.src = imageUrl;
+}
+
+function showGuidance() {
+    const guidance = `
+        <h4>Rule of Thirds Guidance:</h4>
+        <p>To analyze your composition:</p>
+        <ul>
+            <li>Look for key elements near the intersections of the grid lines.</li>
+            <li>Check if the horizon aligns with the top or bottom horizontal line.</li>
+            <li>Observe how the main subject is placed in relation to the grid.</li>
+            <li>Consider the balance of elements across the different sections of the grid.</li>
+        </ul>
+        <p>Remember, the Rule of Thirds is a guideline. Creative compositions may intentionally break this rule.</p>
+    `;
+    document.getElementById('guidance').innerHTML = guidance;
+}
+</script>
