@@ -1,0 +1,73 @@
+<div id="color-palette-generator" style="font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+    <h2 style="text-align: center; color: #333;">Color Palette Generator</h2>
+    <div id="colorPalette" style="display: flex; flex-wrap: wrap; justify-content: center; margin-bottom: 20px;"></div>
+    <div style="display: flex; justify-content: space-between;">
+        <button onclick="generatePalette()" style="padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; background-color: #4CAF50; color: white;">Generate New Palette</button>
+        <button onclick="copyColors()" style="padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; background-color: #008CBA; color: white;">Copy Colors & Pigments</button>
+    </div>
+    <div id="message" style="text-align: center; margin-top: 10px; color: #4CAF50; font-weight: bold; height: 20px;"></div>
+</div>
+<script>
+    var currentColors = [];
+    var pigments = [
+        "Titanium White", "Cadmium Yellow", "Cadmium Red", "Ultramarine Blue", "Phthalo Green",
+        "Burnt Sienna", "Yellow Ochre", "Cerulean Blue", "Alizarin Crimson", "Viridian"
+    ];
+
+    function generateRandomColor() {
+        return '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+    }
+
+    function getRandomPigments() {
+        var numPigments = Math.floor(Math.random() * 3) + 1; // 1 to 3 pigments
+        var selectedPigments = [];
+        for (var i = 0; i < numPigments; i++) {
+            var pigment = pigments[Math.floor(Math.random() * pigments.length)];
+            if (!selectedPigments.includes(pigment)) {
+                selectedPigments.push(pigment);
+            }
+        }
+        return selectedPigments.join(", ");
+    }
+
+    function generatePalette() {
+        var palette = document.getElementById('colorPalette');
+        palette.innerHTML = '';
+        currentColors = [];
+        for (var i = 0; i < 5; i++) {
+            var color = generateRandomColor();
+            var pigment = getRandomPigments();
+            currentColors.push({color: color, pigment: pigment});
+            var colorBox = document.createElement('div');
+            colorBox.style.width = '100px';
+            colorBox.style.margin = '5px';
+            colorBox.style.textAlign = 'center';
+            colorBox.innerHTML = `
+                <div style="width: 100%; height: 50px; background-color: ${color}; margin-bottom: 5px;"></div>
+                <div style="font-size: 12px;">${color}</div>
+                <div style="font-size: 10px;">${pigment}</div>
+            `;
+            palette.appendChild(colorBox);
+        }
+        document.getElementById('message').textContent = '';
+    }
+
+    function copyColors() {
+        var colorString = currentColors.map(c => `${c.color} (${c.pigment})`).join('\n');
+        var tempInput = document.createElement('textarea');
+        tempInput.value = colorString;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        
+        var message = document.getElementById('message');
+        message.textContent = 'Colors and pigments copied to clipboard!';
+        setTimeout(function() {
+            message.textContent = '';
+        }, 2000);
+    }
+
+    // Initialize the palette
+    generatePalette();
+</script>
