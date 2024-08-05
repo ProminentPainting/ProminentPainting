@@ -1,0 +1,69 @@
+<div id="drawing-tool" style="font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+    <h2 style="text-align: center; color: #333;">Simple Sketch Tool</h2>
+    <div style="text-align: center; margin-bottom: 10px;">
+        <label for="colorPicker" style="margin-right: 10px;">Color:</label>
+        <input type="color" id="colorPicker" value="#000000">
+        <label for="brushSize" style="margin-left: 20px; margin-right: 10px;">Brush Size:</label>
+        <input type="range" id="brushSize" min="1" max="20" value="5">
+    </div>
+    <canvas id="drawingCanvas" width="500" height="300" style="border: 1px solid #000; cursor: crosshair;"></canvas>
+    <div style="text-align: center; margin-top: 10px;">
+        <button onclick="clearCanvas()" style="padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; background-color: #f44336; color: white; margin-right: 10px;">Clear Canvas</button>
+        <button onclick="saveDrawing()" style="padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; background-color: #4CAF50; color: white;">Save Drawing</button>
+    </div>
+</div>
+
+<script>
+    var canvas = document.getElementById('drawingCanvas');
+    var ctx = canvas.getContext('2d');
+    var isDrawing = false;
+    var lastX = 0;
+    var lastY = 0;
+
+    function startDrawing(e) {
+        isDrawing = true;
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+    }
+
+    function draw(e) {
+        if (!isDrawing) return;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+    }
+
+    function stopDrawing() {
+        isDrawing = false;
+    }
+
+    function clearCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function saveDrawing() {
+        var link = document.createElement('a');
+        link.download = 'drawing.png';
+        link.href = canvas.toDataURL();
+        link.click();
+    }
+
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseout', stopDrawing);
+
+    document.getElementById('colorPicker').addEventListener('input', function() {
+        ctx.strokeStyle = this.value;
+    });
+
+    document.getElementById('brushSize').addEventListener('input', function() {
+        ctx.lineWidth = this.value;
+    });
+
+    // Initialize canvas
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 5;
+    ctx.lineCap = 'round';
+</script>
