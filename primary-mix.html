@@ -1,0 +1,62 @@
+<style>
+    .color-mixer {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+    }
+    #color-result {
+        width: 150px;
+        height: 150px;
+        margin-top: 20px;
+        border: 1px solid #000;
+    }
+    select, button {
+        margin-top: 10px;
+        padding: 5px;
+        font-size: 16px;
+    }
+</style>
+
+<div class="color-mixer">
+    <h1>Primary Color Mixer</h1>
+    <div>
+        <label for="color1">Select First Color:</label>
+        <select id="color1">
+            <option value="red">Red</option>
+            <option value="yellow">Yellow</option>
+            <option value="blue">Blue</option>
+        </select>
+    </div>
+    <div>
+        <label for="color2">Select Second Color:</label>
+        <select id="color2">
+            <option value="red">Red</option>
+            <option value="yellow">Yellow</option>
+            <option value="blue">Blue</option>
+        </select>
+    </div>
+    <button onclick="mixColors()">Mix</button>
+    <div id="color-result"></div>
+</div>
+
+<script>
+    function mixColors() {
+        const color1 = document.getElementById('color1').value;
+        const color2 = document.getElementById('color2').value;
+        let resultColor;
+
+        if ((color1 === 'red' && color2 === 'yellow') || (color1 === 'yellow' && color2 === 'red')) {
+            resultColor = 'orange';
+        } else if ((color1 === 'red' && color2 === 'blue') || (color1 === 'blue' && color2 === 'red')) {
+            resultColor = 'purple';
+        } else if ((color1 === 'yellow' && color2 === 'blue') || (color1 === 'blue' && color2 === 'yellow')) {
+            resultColor = 'green';
+        } else {
+            resultColor = color1; // Same colors selected
+        }
+
+        document.getElementById('color-result').style.backgroundColor = resultColor;
+    }
+</script>
