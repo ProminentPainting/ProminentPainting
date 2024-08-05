@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .unique-color-mixer {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+        #unique-color-result {
+            width: 150px;
+            height: 150px;
+            margin-top: 20px;
+            border: 1px solid #000;
+        }
+        select, button {
+            margin-top: 10px;
+            padding: 5px;
+            font-size: 16px;
+        }
+    </style>
+    <title>Unique Watercolor Pigment Mixer</title>
+</head>
+<body>
+    <div class="unique-color-mixer">
+        <h1>Watercolor Pigment Mixer</h1>
+        <div>
+            <label for="unique-pigment1">Select First Pigment:</label>
+            <select id="unique-pigment1">
+                <option value="cadmiumRed">Cadmium Red</option>
+                <option value="alizarinCrimson">Alizarin Crimson</option>
+                <option value="ultramarineBlue">Ultramarine Blue</option>
+                <option value="cobaltBlue">Cobalt Blue</option>
+                <option value="ceruleanBlue">Cerulean Blue</option>
+                <option value="phthaloGreen">Phthalo Green</option>
+                <option value="sapGreen">Sap Green</option>
+                <option value="cadmiumYellow">Cadmium Yellow</option>
+                <option value="lemonYellow">Lemon Yellow</option>
+                <option value="yellowOchre">Yellow Ochre</option>
+                <option value="burntSienna">Burnt Sienna</option>
+                <option value="rawSienna">Raw Sienna</option>
+                <option value="burntUmber">Burnt Umber</option>
+                <option value="rawUmber">Raw Umber</option>
+                <option value="paynesGray">Payne's Gray</option>
+                <option value="marsBlack">Mars Black</option>
+                <option value="titaniumWhite">Titanium White</option>
+                <option value="quinacridoneMagenta">Quinacridone Magenta</option>
+                <option value="dioxazinePurple">Dioxazine Purple</option>
+                <option value="viridian">Viridian</option>
+            </select>
+        </div>
+        <div>
+            <label for="unique-pigment2">Select Second Pigment:</label>
+            <select id="unique-pigment2">
+                <option value="cadmiumRed">Cadmium Red</option>
+                <option value="alizarinCrimson">Alizarin Crimson</option>
+                <option value="ultramarineBlue">Ultramarine Blue</option>
+                <option value="cobaltBlue">Cobalt Blue</option>
+                <option value="ceruleanBlue">Cerulean Blue</option>
+                <option value="phthaloGreen">Phthalo Green</option>
+                <option value="sapGreen">Sap Green</option>
+                <option value="cadmiumYellow">Cadmium Yellow</option>
+                <option value="lemonYellow">Lemon Yellow</option>
+                <option value="yellowOchre">Yellow Ochre</option>
+                <option value="burntSienna">Burnt Sienna</option>
+                <option value="rawSienna">Raw Sienna</option>
+                <option value="burntUmber">Burnt Umber</option>
+                <option value="rawUmber">Raw Umber</option>
+                <option value="paynesGray">Payne's Gray</option>
+                <option value="marsBlack">Mars Black</option>
+                <option value="titaniumWhite">Titanium White</option>
+                <option value="quinacridoneMagenta">Quinacridone Magenta</option>
+                <option value="dioxazinePurple">Dioxazine Purple</option>
+                <option value="viridian">Viridian</option>
+            </select>
+        </div>
+        <button onclick="uniqueMixPigments()">Mix</button>
+        <div id="unique-color-result"></div>
+    </div>
+
+    <script>
+        (function() {
+            // Define base colors for each pigment
+            const uniquePigmentColors = {
+                cadmiumRed: '#E30022',
+                alizarinCrimson: '#E32636',
+                ultramarineBlue: '#3F00FF',
+                cobaltBlue: '#0047AB',
+                ceruleanBlue: '#007BA7',
+                phthaloGreen: '#123524',
+                sapGreen: '#507D2A',
+                cadmiumYellow: '#FFF600',
+                lemonYellow: '#FFF44F',
+                yellowOchre: '#CC7722',
+                burntSienna: '#E97451',
+                rawSienna: '#D68A59',
+                burntUmber: '#8A3324',
+                rawUmber: '#826644',
+                paynesGray: '#536878',
+                marsBlack: '#1C1C1C',
+                titaniumWhite: '#FFFFFF',
+                quinacridoneMagenta: '#8E3A59',
+                dioxazinePurple: '#6E0D7A',
+                viridian: '#40826D'
+            };
+
+            window.uniqueMixPigments = function() {
+                const pigment1 = document.getElementById('unique-pigment1').value;
+                const pigment2 = document.getElementById('unique-pigment2').value;
+
+                const color1 = uniquePigmentColors[pigment1];
+                const color2 = uniquePigmentColors[pigment2];
+
+                const resultColor = blendUniqueColors(color1, color2);
+
+                document.getElementById('unique-color-result').style.backgroundColor = resultColor;
+            }
+
+            // Blend two colors (simple average for demonstration purposes)
+            function blendUniqueColors(color1, color2) {
+                const c1 = hexToRgb(color1);
+                const c2 = hexToRgb(color2);
+
+                const blended = {
+                    r: Math.round((c1.r + c2.r) / 2),
+                    g: Math.round((c1.g + c2.g) / 2),
+                    b: Math.round((c1.b + c2.b) / 2)
+                };
+
+                return rgbToHex(blended.r, blended.g, blended.b);
+            }
+
+            function hexToRgb(hex) {
+                const bigint = parseInt(hex.slice(1), 16);
+                return {
+                    r: (bigint >> 16) & 255,
+                    g: (bigint >> 8) & 255,
+                    b: bigint & 255
+                };
+            }
+
+            function rgbToHex(r, g, b) {
+                return "#" + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1).toUpperCase();
+            }
+        })();
+    </script>
+</body>
+</html>
