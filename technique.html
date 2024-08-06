@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <style>
+    .water { fill: #E3F2FD; }
+    .brush { fill: #795548; }
+    .bristles { fill: #8D6E63; }
+    .paint { fill: #4CAF50; opacity: 0; }
+    .technique-text { font-family: Arial, sans-serif; font-size: 24px; fill: #333; }
+    @keyframes wet-on-wet {
+      0% { transform: translate(0, 0); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translate(100px, 80px); opacity: 0.6; }
+    }
+    @keyframes wet-on-dry {
+      0% { transform: translate(0, 0); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translate(100px, 0); opacity: 1; }
+    }
+    @keyframes dry-brush {
+      0%, 20%, 40%, 60%, 80% { transform: translate(0, 0); }
+      10%, 30%, 50%, 70%, 90% { transform: translate(10px, 0); }
+      100% { transform: translate(100px, 0); }
+    }
+    @keyframes wash {
+      0% { width: 20px; opacity: 0.2; }
+      100% { width: 200px; opacity: 0.4; }
+    }
+  </style>
+  
+  <!-- Water Paper Background -->
+  <rect x="0" y="0" width="800" height="600" class="water" />
+  
+  <!-- Wet on Wet -->
+  <g transform="translate(50, 50)">
+    <text x="0" y="-10" class="technique-text">Wet on Wet</text>
+    <rect x="0" y="0" width="200" height="100" fill="#B3E5FC" />
+    <circle cx="50" cy="50" r="20" class="paint">
+      <animate attributeName="opacity" from="0" to="0.6" dur="3s" repeatCount="indefinite" />
+      <animateTransform attributeName="transform" type="translate"
+        values="0,0; 100,80; 0,0" dur="3s" repeatCount="indefinite" />
+    </circle>
+  </g>
+  
+  <!-- Wet on Dry -->
+  <g transform="translate(300, 50)">
+    <text x="0" y="-10" class="technique-text">Wet on Dry</text>
+    <rect x="0" y="0" width="200" height="100" fill="#FFF" />
+    <rect x="0" y="0" width="20" height="100" class="paint">
+      <animate attributeName="width" from="20" to="200" dur="3s" repeatCount="indefinite" />
+    </rect>
+  </g>
+  
+  <!-- Dry Brush -->
+  <g transform="translate(50, 250)">
+    <text x="0" y="-10" class="technique-text">Dry Brush</text>
+    <rect x="0" y="0" width="200" height="100" fill="#FFF" />
+    <g class="brush">
+      <rect x="0" y="0" width="20" height="60" />
+      <rect x="5" y="60" width="10" height="20" class="bristles" />
+    </g>
+    <animateTransform xlink:href=".brush" attributeName="transform" type="translate"
+      values="0,0; 10,0; 0,0; 10,0; 0,0; 10,0; 0,0; 10,0; 0,0; 100,0"
+      dur="3s" repeatCount="indefinite" />
+  </g>
+  
+  <!-- Wash -->
+  <g transform="translate(300, 250)">
+    <text x="0" y="-10" class="technique-text">Wash</text>
+    <rect x="0" y="0" width="200" height="100" fill="#FFF" />
+    <rect x="0" y="0" width="20" height="100" class="paint">
+      <animate attributeName="width" from="20" to="200" dur="3s" repeatCount="indefinite" />
+      <animate attributeName="opacity" from="0.2" to="0.4" dur="3s" repeatCount="indefinite" />
+    </rect>
+  </g>
+  
+  <!-- Paintbrush -->
+  <g transform="translate(350, 400)">
+    <rect x="0" y="0" width="100" height="20" class="brush" />
+    <rect x="100" y="0" width="30" height="20" class="bristles" />
+    <animateTransform attributeName="transform" type="rotate"
+      values="0 0 10; -20 0 10; 0 0 10" dur="2s" repeatCount="indefinite" />
+  </g>
+</svg>
