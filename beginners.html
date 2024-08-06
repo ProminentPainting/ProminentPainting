@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beginner's Guide to Watercolor Techniques</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        .technique {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .technique-header {
+            padding: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .technique-content {
+            padding: 15px;
+            display: none;
+        }
+        .wet-on-wet { background-color: #AED6F1; }
+        .wet-on-dry { background-color: #A2D9CE; }
+        .dry-brush { background-color: #F9E79F; }
+        .wash { background-color: #F5B7B1; }
+    </style>
+</head>
+<body>
+    <h1>Beginner's Guide to Watercolor Techniques</h1>
+    
+    <div class="technique">
+        <div class="technique-header wet-on-wet" onclick="toggleContent(this)">Wet on Wet</div>
+        <div class="technique-content">
+            <p>The wet-on-wet technique involves applying wet paint to wet paper, creating soft, blended effects.</p>
+            <h3>How to do it:</h3>
+            <ol>
+                <li>Wet your paper with clean water.</li>
+                <li>While the paper is still damp, apply your watercolor paint.</li>
+                <li>Watch as the colors blend and spread on the wet surface.</li>
+            </ol>
+            <p>This technique is great for creating atmospheric backgrounds or soft, dreamy effects.</p>
+        </div>
+    </div>
+
+    <div class="technique">
+        <div class="technique-header wet-on-dry" onclick="toggleContent(this)">Wet on Dry</div>
+        <div class="technique-content">
+            <p>The wet-on-dry technique involves applying wet paint to dry paper, allowing for more defined shapes and lines.</p>
+            <h3>How to do it:</h3>
+            <ol>
+                <li>Start with dry paper.</li>
+                <li>Apply wet paint directly to the dry surface.</li>
+                <li>The paint will stay where you put it, allowing for more control.</li>
+            </ol>
+            <p>This technique is useful for adding details or creating sharp edges in your painting.</p>
+        </div>
+    </div>
+
+    <div class="technique">
+        <div class="technique-header dry-brush" onclick="toggleContent(this)">Dry Brush</div>
+        <div class="technique-content">
+            <p>The dry brush technique uses a dry brush with little water to create texture and detail.</p>
+            <h3>How to do it:</h3>
+            <ol>
+                <li>Use a dry or slightly damp brush.</li>
+                <li>Load it with paint that's not too watery.</li>
+                <li>Lightly brush over dry paper, allowing the texture of the paper to show through.</li>
+            </ol>
+            <p>This technique is excellent for adding texture to your paintings or creating fine details.</p>
+        </div>
+    </div>
+
+    <div class="technique">
+        <div class="technique-header wash" onclick="toggleContent(this)">Wash</div>
+        <div class="technique-content">
+            <p>A wash creates a thin, transparent layer of color over a large area.</p>
+            <h3>How to do it:</h3>
+            <ol>
+                <li>Wet your paper with clean water.</li>
+                <li>Mix your paint with plenty of water to create a diluted solution.</li>
+                <li>Apply the diluted paint evenly across the paper.</li>
+            </ol>
+            <p>Washes are great for creating backgrounds or large areas of consistent color in your painting.</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleContent(header) {
+            var content = header.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>
