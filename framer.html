@@ -1,5 +1,5 @@
 <div id="pfp-preview-tool">
-  <h2>Frame Previews</h2>
+  <h2>Framing Previews</h2>
   <div id="pfp-image-upload">
     <input type="file" id="pfp-image-input" accept="image/*">
     <p>or</p>
@@ -171,38 +171,48 @@
     matWidth.addEventListener('input', updateMat);
 
     // Frame style presets
-    function applyFrameStyle(style, width) {
+function applyFrameStyle(style, width) {
       const baseWidth = width === 'thin' ? 10 : width === 'medium' ? 20 : 30;
       let borderStyle = 'solid';
       let borderImage = 'none';
+      let boxShadow = 'none';
+      let filter = 'none';
 
       switch (style) {
         case 'modern':
           borderStyle = 'solid';
+          boxShadow = `0 0 0 ${baseWidth}px ${frameColor.value}, 0 0 0 ${baseWidth + 5}px #fff`;
           break;
         case 'rustic':
-          borderStyle = 'ridge';
+          borderStyle = 'solid';
+          borderImage = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' fill='${frameColor.value}'/%3E%3C/svg%3E") 30 stretch`;
+          filter = 'contrast(1.2) brightness(0.9)';
           break;
         case 'ornate':
           borderStyle = 'solid';
-          borderImage = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='75' height='75' viewBox='0 0 75 75'%3E%3Cpath d='M0 0h75v75H0z' fill='${frameColor.value}'/%3E%3Cpath d='M37.5 15L15 37.5 37.5 60 60 37.5z' fill='%23fff'/%3E%3C/svg%3E") 25% repeat`;
+          borderImage = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M0 0h100v100H0z' fill='${frameColor.value}'/%3E%3Cpath d='M20 20h60v60H20z' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M25 25l50 50M75 25l-50 50' stroke='%23fff' stroke-width='2'/%3E%3Ccircle cx='50' cy='50' r='20' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E") 30 stretch`;
           break;
         case 'minimal':
           borderStyle = 'solid';
-          frame.style.boxShadow = '0 0 10px rgba(0,0,0,0.1)';
+          boxShadow = '0 0 10px rgba(0,0,0,0.1)';
           break;
         default: // classic
-          borderStyle = 'solid';
-          frame.style.boxShadow = 'none';
+          borderStyle = 'double';
+          borderImage = 'none';
+          boxShadow = `inset 0 0 0 ${baseWidth - 5}px ${frameColor.value}`;
       }
 
       Object.assign(frame.style, {
         borderWidth: `${baseWidth}px`,
         borderStyle: borderStyle,
         borderImage: borderImage,
-        borderColor: frameColor.value
+        borderColor: frameColor.value,
+        boxShadow: boxShadow,
+        filter: filter
       });
     }
+
+
 
     // Initial update
     updateFrame();
