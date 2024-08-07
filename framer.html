@@ -1,5 +1,5 @@
 <div id="pfp-preview-tool">
-  <h2>Framing Previews</h2>
+  <h2>Painting Frame Preview Tool</h2>
   <div id="pfp-image-upload">
     <input type="file" id="pfp-image-input" accept="image/*">
     <p>or</p>
@@ -21,9 +21,11 @@
     <select id="pfp-frame-style">
       <option value="classic">Classic</option>
       <option value="modern">Modern</option>
-      <option value="rustic">Rustic</option>
       <option value="ornate">Ornate</option>
       <option value="minimal">Minimal</option>
+      <option value="wood">Wood</option>
+      <option value="metal">Metal</option>
+      <option value="floating">Floating</option>
     </select>
     <label for="pfp-frame-width">Frame Width:</label>
     <select id="pfp-frame-width">
@@ -32,7 +34,7 @@
       <option value="thick">Thick</option>
     </select>
     <label for="pfp-frame-color">Frame Color:</label>
-    <input type="color" id="pfp-frame-color" value="#000000">
+    <input type="color" id="pfp-frame-color" value="#8B4513">
     <label for="pfp-mat-color">Mat Color:</label>
     <input type="color" id="pfp-mat-color" value="#FFFFFF">
     <label for="pfp-mat-width">Mat Width:</label>
@@ -63,8 +65,9 @@
     left: 0;
     width: 100%;
     height: 100%;
-    border: 20px solid #000;
+    border: 20px solid #8B4513;
     box-sizing: border-box;
+    transition: all 0.3s ease;
   }
   #pfp-mat {
     position: absolute;
@@ -128,7 +131,7 @@
       const img = new Image();
       img.onload = function() {
         previewImage.src = src;
-        updateMat(); // Ensure mat is updated after image load
+        updateMat();
       };
       img.src = src;
     }
@@ -154,7 +157,6 @@
     function updateFrame() {
       const style = frameStyle.value;
       const width = frameWidth.value;
-      frame.className = `frame ${style} ${width}`;
       applyFrameStyle(style, width);
     }
 
@@ -170,49 +172,52 @@
     matColor.addEventListener('input', updateMat);
     matWidth.addEventListener('input', updateMat);
 
-    // Frame style presets
-function applyFrameStyle(style, width) {
+    function applyFrameStyle(style, width) {
       const baseWidth = width === 'thin' ? 10 : width === 'medium' ? 20 : 30;
       let borderStyle = 'solid';
       let borderImage = 'none';
       let boxShadow = 'none';
-      let filter = 'none';
+      let transform = 'none';
 
       switch (style) {
+        case 'classic':
+          borderStyle = 'double';
+          boxShadow = `inset 0 0 0 ${baseWidth/2}px ${frameColor.value}, 0 0 0 ${baseWidth}px ${frameColor.value}`;
+          break;
         case 'modern':
           borderStyle = 'solid';
-          boxShadow = `0 0 0 ${baseWidth}px ${frameColor.value}, 0 0 0 ${baseWidth + 5}px #fff`;
-          break;
-        case 'rustic':
-          borderStyle = 'solid';
-          borderImage = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' fill='${frameColor.value}'/%3E%3C/svg%3E") 30 stretch`;
-          filter = 'contrast(1.2) brightness(0.9)';
+          boxShadow = `0 0 0 ${baseWidth}px ${frameColor.value}, 0 0 0 ${baseWidth + 5}px #fff, 0 0 10px rgba(0,0,0,0.2)`;
           break;
         case 'ornate':
-          borderStyle = 'solid';
-          borderImage = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M0 0h100v100H0z' fill='${frameColor.value}'/%3E%3Cpath d='M20 20h60v60H20z' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M25 25l50 50M75 25l-50 50' stroke='%23fff' stroke-width='2'/%3E%3Ccircle cx='50' cy='50' r='20' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E") 30 stretch`;
+          borderImage = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M0 0h100v100H0z' fill='${frameColor.value}'/%3E%3Cpath d='M10 10h80v80H10z' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M20 20c0-5.5 4.5-10 10-10s10 4.5 10 10h20c0-5.5 4.5-10 10-10s10 4.5 10 10v60c0 5.5-4.5 10-10 10s-10-4.5-10-10H40c0 5.5-4.5 10-10 10s-10-4.5-10-10V20z' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E") 30 stretch`;
           break;
         case 'minimal':
           borderStyle = 'solid';
           boxShadow = '0 0 10px rgba(0,0,0,0.1)';
           break;
-        default: // classic
-          borderStyle = 'double';
-          borderImage = 'none';
-          boxShadow = `inset 0 0 0 ${baseWidth - 5}px ${frameColor.value}`;
+        case 'wood':
+          borderImage = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cfilter id='noise' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.5 0'//%3E%3C/filter%3E%3Crect width='200' height='200' fill='${frameColor.value}'/%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.1'/%3E%3C/svg%3E") 100 stretch`;
+          break;
+        case 'metal':
+          borderImage = `linear-gradient(45deg, ${frameColor.value}, #fff, ${frameColor.value}) 1`;
+          boxShadow = `inset 0 0 10px rgba(0,0,0,0.5), 0 0 10px rgba(0,0,0,0.2)`;
+          break;
+        case 'floating':
+          borderStyle = 'none';
+          boxShadow = '0 10px 20px rgba(0,0,0,0.3)';
+          transform = 'perspective(1000px) rotateX(5deg)';
+          break;
       }
 
       Object.assign(frame.style, {
-        borderWidth: `${baseWidth}px`,
+        borderWidth: style === 'floating' ? '0' : `${baseWidth}px`,
         borderStyle: borderStyle,
         borderImage: borderImage,
         borderColor: frameColor.value,
         boxShadow: boxShadow,
-        filter: filter
+        transform: transform
       });
     }
-
-
 
     // Initial update
     updateFrame();
