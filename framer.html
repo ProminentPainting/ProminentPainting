@@ -20,11 +20,21 @@
       <option value="classic">Classic</option>
       <option value="modern">Modern</option>
       <option value="rustic">Rustic</option>
+      <option value="ornate">Ornate</option>
+      <option value="minimal">Minimal</option>
+    </select>
+    <label for="pfp-frame-width">Frame Width:</label>
+    <select id="pfp-frame-width">
+      <option value="thin">Thin</option>
+      <option value="medium" selected>Medium</option>
+      <option value="thick">Thick</option>
     </select>
     <label for="pfp-frame-color">Frame Color:</label>
     <input type="color" id="pfp-frame-color" value="#000000">
     <label for="pfp-mat-color">Mat Color:</label>
     <input type="color" id="pfp-mat-color" value="#FFFFFF">
+    <label for="pfp-mat-width">Mat Width:</label>
+    <input type="range" id="pfp-mat-width" min="0" max="100" value="50">
   </div>
 </div>
 
@@ -66,8 +76,8 @@
     align-items: center;
   }
   #pfp-preview-image {
-    max-width: 100%;
-    max-height: 100%;
+    max-width: calc(100% - 20px);
+    max-height: calc(100% - 20px);
     object-fit: contain;
   }
   #pfp-controls {
@@ -80,8 +90,10 @@
     margin-right: 5px;
   }
   #pfp-frame-style,
+  #pfp-frame-width,
   #pfp-frame-color,
-  #pfp-mat-color {
+  #pfp-mat-color,
+  #pfp-mat-width {
     margin-right: 15px;
   }
 </style>
@@ -93,8 +105,10 @@
     const loadButton = document.getElementById('pfp-load-image');
     const previewImage = document.getElementById('pfp-preview-image');
     const frameStyle = document.getElementById('pfp-frame-style');
+    const frameWidth = document.getElementById('pfp-frame-width');
     const frameColor = document.getElementById('pfp-frame-color');
     const matColor = document.getElementById('pfp-mat-color');
+    const matWidth = document.getElementById('pfp-mat-width');
     const frame = document.getElementById('pfp-frame');
     const mat = document.getElementById('pfp-mat');
 
@@ -120,29 +134,60 @@
       }
     });
 
-    frameStyle.addEventListener('change', function() {
-      const style = this.value;
-      frame.className = 'frame ' + style;
-    });
+    function updateFrame() {
+      const style = frameStyle.value;
+      const width = frameWidth.value;
+      frame.className = `frame ${style} ${width}`;
+      frame.style.borderColor = frameColor.value;
+      applyFrameStyle(style, width);
+    }
 
-    frameColor.addEventListener('input', function() {
-      frame.style.borderColor = this.value;
-    });
+    function updateMat() {
+      mat.style.backgroundColor = matColor.value;
+      const width = matWidth.value;
+      mat.style.top = mat.style.left = mat.style.right = mat.style.bottom = `${width / 2}px`;
+    }
 
-    matColor.addEventListener('input', function() {
-      mat.style.backgroundColor = this.value;
-    });
+    frameStyle.addEventListener('change', updateFrame);
+    frameWidth.addEventListener('change', updateFrame);
+    frameColor.addEventListener('input', updateFrame);
+    matColor.addEventListener('input', updateMat);
+    matWidth.addEventListener('input', updateMat);
 
     // Frame style presets
-    const frameStyles = {
-      classic: { borderWidth: '20px', borderStyle: 'solid' },
-      modern: { borderWidth: '10px', borderStyle: 'solid' },
-      rustic: { borderWidth: '15px', borderStyle: 'ridge' }
-    };
+    function applyFrameStyle(style, width) {
+      const baseWidth = width === 'thin' ? 10 : width === 'medium' ? 20 : 30;
+      let borderStyle = 'solid';
+      let borderImage = 'none';
 
-    frameStyle.addEventListener('change', function() {
-      const style = this.value;
-      Object.assign(frame.style, frameStyles[style]);
-    });
+      switch (style) {
+        case 'modern':
+          borderStyle = 'solid';
+          break;
+        case 'rustic':
+          borderStyle = 'ridge';
+          break;
+        case 'ornate':
+          borderStyle = 'solid';
+          borderImage = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='75' height='75' viewBox='0 0 75 75'%3E%3Cpath d='M0 0h75v75H0z' fill='%23000'/%3E%3Cpath d='M37.5 15L15 37.5 37.5 60 60 37.5z' fill='%23fff'/%3E%3C/svg%3E") 25% repeat`;
+          break;
+        case 'minimal':
+          borderStyle = 'solid';
+          frame.style.boxShadow = '0 0 10px rgba(0,0,0,0.1)';
+          break;
+        default: // classic
+          borderStyle = 'solid';
+      }
+
+      Object.assign(frame.style, {
+        borderWidth: `${baseWidth}px`,
+        borderStyle: borderStyle,
+        borderImage: borderImage
+      });
+    }
+
+    // Initial update
+    updateFrame();
+    updateMat();
   })();
 </script>
