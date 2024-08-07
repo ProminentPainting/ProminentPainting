@@ -1,5 +1,5 @@
 <div id="pfp-preview-tool">
-  <h2>Frame Preview</h2>
+  <h2>Frame Previews</h2>
   <div id="pfp-image-upload">
     <input type="file" id="pfp-image-input" accept="image/*">
     <p>or</p>
@@ -193,6 +193,7 @@
           break;
         default: // classic
           borderStyle = 'solid';
+          frame.style.boxShadow = 'none';
       }
 
       Object.assign(frame.style, {
