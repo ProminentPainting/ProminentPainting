@@ -1,224 +1,233 @@
-<div id="pfp-preview-tool">
-  <h2>Painting Frame Preview Tool</h2>
-  <div id="pfp-image-upload">
-    <input type="file" id="pfp-image-input" accept="image/*">
-    <p>or</p>
-    <input type="text" id="pfp-image-url" placeholder="Enter image URL">
-    <button id="pfp-load-image">Load Image</button>
-  </div>
-  <div id="pfp-preview-container">
-    <div id="pfp-frame">
-      <div id="pfp-mat">
-        <div id="pfp-image-container">
-          <img id="pfp-preview-image" src="https://via.placeholder.com/400x300" alt="Preview">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painting Frame Preview Tool</title>
+    <style>
+        #pfp-preview-tool {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        #pfp-image-upload {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        #pfp-preview-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 75%; /* 4:3 aspect ratio */
+            margin-bottom: 20px;
+        }
+        #pfp-frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 20px solid #8B4513;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        #pfp-mat {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #pfp-image-container {
+            position: relative;
+            max-width: 100%;
+            max-height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        #pfp-preview-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        #pfp-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        #pfp-controls label {
+            margin-right: 5px;
+        }
+        #pfp-frame-style,
+        #pfp-frame-width,
+        #pfp-frame-color,
+        #pfp-mat-color,
+        #pfp-mat-width {
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div id="pfp-preview-tool">
+        <h2>Painting Frame Preview Tool</h2>
+        <div id="pfp-image-upload">
+            <input type="file" id="pfp-image-input" accept="image/*">
+            <p>or</p>
+            <input type="text" id="pfp-image-url" placeholder="Enter image URL">
+            <button id="pfp-load-image">Load Image</button>
         </div>
-      </div>
+        <div id="pfp-preview-container">
+            <div id="pfp-frame">
+                <div id="pfp-mat">
+                    <div id="pfp-image-container">
+                        <img id="pfp-preview-image" src="https://via.placeholder.com/400x300" alt="Preview">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="pfp-controls">
+            <h3>Customize Frame</h3>
+            <label for="pfp-frame-style">Frame Style:</label>
+            <select id="pfp-frame-style">
+                <option value="plain">Plain</option>
+                <option value="classical-ornate">Classical Ornate</option>
+                <option value="floating">Floating</option>
+                <option value="box">Box</option>
+                <option value="tray">Tray</option>
+                <option value="metal">Metal</option>
+            </select>
+            <label for="pfp-frame-width">Frame Width:</label>
+            <select id="pfp-frame-width">
+                <option value="thin">Thin</option>
+                <option value="medium" selected>Medium</option>
+                <option value="thick">Thick</option>
+            </select>
+            <label for="pfp-frame-color">Frame Color:</label>
+            <input type="color" id="pfp-frame-color" value="#8B4513">
+            <label for="pfp-mat-color">Mat Color:</label>
+            <input type="color" id="pfp-mat-color" value="#FFFFFF">
+            <label for="pfp-mat-width">Mat Width:</label>
+            <input type="range" id="pfp-mat-width" min="0" max="100" value="50">
+        </div>
     </div>
-  </div>
-  <div id="pfp-controls">
-    <h3>Customize Frame</h3>
-    <label for="pfp-frame-style">Frame Style:</label>
-    <select id="pfp-frame-style">
-      <option value="plain">Plain</option>
-      <option value="classical-ornate">Classical Ornate</option>
-      <option value="floating">Floating</option>
-      <option value="box">Box</option>
-      <option value="tray">Tray</option>
-      <option value="metal">Metal</option>
-    </select>
-    <label for="pfp-frame-width">Frame Width:</label>
-    <select id="pfp-frame-width">
-      <option value="thin">Thin</option>
-      <option value="medium" selected>Medium</option>
-      <option value="thick">Thick</option>
-    </select>
-    <label for="pfp-frame-color">Frame Color:</label>
-    <input type="color" id="pfp-frame-color" value="#8B4513">
-    <label for="pfp-mat-color">Mat Color:</label>
-    <input type="color" id="pfp-mat-color" value="#FFFFFF">
-    <label for="pfp-mat-width">Mat Width:</label>
-    <input type="range" id="pfp-mat-width" min="0" max="100" value="50">
-  </div>
-</div>
 
-<style>
-  #pfp-preview-tool {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  }
-  #pfp-image-upload {
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  #pfp-preview-container {
-    position: relative;
-    width: 100%;
-    padding-bottom: 75%; /* 4:3 aspect ratio */
-    margin-bottom: 20px;
-  }
-  #pfp-frame {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 20px solid #8B4513;
-    box-sizing: border-box;
-    transition: all 0.3s ease;
-  }
-  #pfp-mat {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  #pfp-image-container {
-    position: relative;
-    max-width: 100%;
-    max-height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
-  #pfp-preview-image {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  }
-  #pfp-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-  }
-  #pfp-controls label {
-    margin-right: 5px;
-  }
-  #pfp-frame-style,
-  #pfp-frame-width,
-  #pfp-frame-color,
-  #pfp-mat-color,
-  #pfp-mat-width {
-    margin-right: 15px;
-  }
-</style>
+    <script>
+        (function() {
+            const imageInput = document.getElementById('pfp-image-input');
+            const imageUrl = document.getElementById('pfp-image-url');
+            const loadButton = document.getElementById('pfp-load-image');
+            const previewImage = document.getElementById('pfp-preview-image');
+            const frameStyle = document.getElementById('pfp-frame-style');
+            const frameWidth = document.getElementById('pfp-frame-width');
+            const frameColor = document.getElementById('pfp-frame-color');
+            const matColor = document.getElementById('pfp-mat-color');
+            const matWidth = document.getElementById('pfp-mat-width');
+            const frame = document.getElementById('pfp-frame');
+            const mat = document.getElementById('pfp-mat');
+            const imageContainer = document.getElementById('pfp-image-container');
 
-<script>
-  (function() {
-    const imageInput = document.getElementById('pfp-image-input');
-    const imageUrl = document.getElementById('pfp-image-url');
-    const loadButton = document.getElementById('pfp-load-image');
-    const previewImage = document.getElementById('pfp-preview-image');
-    const frameStyle = document.getElementById('pfp-frame-style');
-    const frameWidth = document.getElementById('pfp-frame-width');
-    const frameColor = document.getElementById('pfp-frame-color');
-    const matColor = document.getElementById('pfp-mat-color');
-    const matWidth = document.getElementById('pfp-mat-width');
-    const frame = document.getElementById('pfp-frame');
-    const mat = document.getElementById('pfp-mat');
-    const imageContainer = document.getElementById('pfp-image-container');
+            function loadImage(src) {
+                const img = new Image();
+                img.onload = function() {
+                    previewImage.src = src;
+                    updateMat();
+                };
+                img.src = src;
+            }
 
-    function loadImage(src) {
-      const img = new Image();
-      img.onload = function() {
-        previewImage.src = src;
-        updateMat();
-      };
-      img.src = src;
-    }
+            imageInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        loadImage(e.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
 
-    imageInput.addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          loadImage(e.target.result);
-        };
-        reader.readAsDataURL(file);
-      }
-    });
+            loadButton.addEventListener('click', function() {
+                const url = imageUrl.value.trim();
+                if (url) {
+                    loadImage(url);
+                }
+            });
 
-    loadButton.addEventListener('click', function() {
-      const url = imageUrl.value.trim();
-      if (url) {
-        loadImage(url);
-      }
-    });
+            function updateFrame() {
+                const style = frameStyle.value;
+                const width = frameWidth.value;
+                applyFrameStyle(style, width);
+            }
 
-    function updateFrame() {
-      const style = frameStyle.value;
-      const width = frameWidth.value;
-      applyFrameStyle(style, width);
-    }
+            function updateMat() {
+                mat.style.backgroundColor = matColor.value;
+                const width = parseInt(matWidth.value);
+                imageContainer.style.width = imageContainer.style.height = `calc(100% - ${width * 2}px)`;
+            }
 
-    function updateMat() {
-      mat.style.backgroundColor = matColor.value;
-      const width = parseInt(matWidth.value);
-      imageContainer.style.width = imageContainer.style.height = `calc(100% - ${width * 2}px)`;
-    }
+            frameStyle.addEventListener('change', updateFrame);
+            frameWidth.addEventListener('change', updateFrame);
+            frameColor.addEventListener('input', updateFrame);
+            matColor.addEventListener('input', updateMat);
+            matWidth.addEventListener('input', updateMat);
 
-    frameStyle.addEventListener('change', updateFrame);
-    frameWidth.addEventListener('change', updateFrame);
-    frameColor.addEventListener('input', updateFrame);
-    matColor.addEventListener('input', updateMat);
-    matWidth.addEventListener('input', updateMat);
+            function applyFrameStyle(style, width) {
+                const baseWidth = width === 'thin' ? 10 : width === 'medium' ? 20 : 30;
+                let borderStyle = 'solid';
+                let borderImage = 'none';
+                let boxShadow = 'none';
+                let transform = 'none';
 
-    function applyFrameStyle(style, width) {
-      const baseWidth = width === 'thin' ? 10 : width === 'medium' ? 20 : 30;
-      let borderStyle = 'solid';
-      let borderImage = 'none';
-      let boxShadow = 'none';
-      let transform = 'none';
+                switch (style) {
+                    case 'plain':
+                        borderStyle = 'solid';
+                        boxShadow = 'none';
+                        break;
+                    case 'classical-ornate':
+                        borderImage = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='gold' color-interpolation-filters='sRGB'%3E%3CfeComponentTransfer%3E%3CfeFuncR type='table' tableValues='0.91 0.88 0.82'/%3E%3CfeFuncG type='table' tableValues='0.80 0.74 0.64'/%3E%3CfeFuncB type='table' tableValues='0.56 0.49 0.40'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Cpath fill='${frameColor.value}' filter='url(%23gold)' d='M0 0h100v100H0z'/%3E%3Cpath fill='none' stroke='rgba(255,255,255,0.2)' stroke-width='2' d='M10 10h80v80H10z M15 15h70v70H15z'/%3E%3Cpath fill='rgba(255,255,255,0.2)' d='M0 0l20 20h-20zM100 0l-20 20h20zM0 100l20-20h-20zM100 100l-20-20h20z'/%3E%3C/svg%3E") 30 stretch`;
+                        boxShadow = '0 0 10px rgba(0,0,0,0.3)';
+                        break;
+                    case 'floating':
+                        borderStyle = 'none';
+                        boxShadow = '0 10px 20px rgba(0,0,0,0.3)';
+                        transform = 'perspective(1000px) rotateX(5deg)';
+                        break;
+                    case 'box':
+                        borderStyle = 'solid';
+                        boxShadow = `inset 0 0 0 ${baseWidth/2}px ${frameColor.value}, 0 0 0 ${baseWidth}px ${frameColor.value}, 5px 5px 10px rgba(0,0,0,0.2)`;
+                        break;
+                    case 'tray':
+                        borderStyle = 'solid';
+                        boxShadow = `inset 0 ${baseWidth}px ${baseWidth}px rgba(0,0,0,0.2)`;
+                        transform = 'perspective(1000px) rotateX(2deg)';
+                        break;
+                    case 'metal':
+                        borderImage = `linear-gradient(45deg, ${frameColor.value}, #fff, ${frameColor.value}) 1`;
+                        boxShadow = `inset 0 0 10px rgba(0,0,0,0.5), 0 0 5px rgba(255,255,255,0.5)`;
+                        break;
+                }
 
-      switch (style) {
-        case 'plain':
-          borderStyle = 'solid';
-          boxShadow = 'none';
-          break;
-        case 'classical-ornate':
-          borderImage = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='gold' color-interpolation-filters='sRGB'%3E%3CfeComponentTransfer%3E%3CfeFuncR type='table' tableValues='0.91 0.88 0.82'/%3E%3CfeFuncG type='table' tableValues='0.80 0.74 0.64'/%3E%3CfeFuncB type='table' tableValues='0.56 0.49 0.40'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Cpath fill='${frameColor.value}' filter='url(%23gold)' d='M0 0h100v100H0z'/%3E%3Cpath fill='none' stroke='rgba(255,255,255,0.2)' stroke-width='2' d='M10 10h80v80H10z M15 15h70v70H15z'/%3E%3Cpath fill='rgba(255,255,255,0.2)' d='M0 0l20 20h-20zM100 0l-20 20h20zM0 100l20-20h-20zM100 100l-20-20h20z'/%3E%3C/svg%3E") 30 stretch`;
-          boxShadow = '0 0 10px rgba(0,0,0,0.3)';
-          break;
-        case 'floating':
-          borderStyle = 'none';
-          boxShadow = '0 10px 20px rgba(0,0,0,0.3)';
-          transform = 'perspective(1000px) rotateX(5deg)';
-          break;
-        case 'box':
-          borderStyle = 'solid';
-          boxShadow = `inset 0 0 0 ${baseWidth/2}px ${frameColor.value}, 0 0 0 ${baseWidth}px ${frameColor.value}, 5px 5px 10px rgba(0,0,0,0.2)`;
-          break;
-        case 'tray':
-          borderStyle = 'solid';
-          boxShadow = `inset 0 ${baseWidth}px ${baseWidth}px rgba(0,0,0,0.2)`;
-          transform = 'perspective(1000px) rotateX(2deg)';
-          break;
-        case 'metal':
-          borderImage = `linear-gradient(45deg, ${frameColor.value}, #fff, ${frameColor.value}) 1`;
-          boxShadow = `inset 0 0 10px rgba(0,0,0,0.5), 0 0 5px rgba(255,255,255,0.5)`;
-          break;
-      }
+                Object.assign(frame.style, {
+                    borderWidth: style === 'floating' ? '0' : `${baseWidth}px`,
+                    borderStyle: borderStyle,
+                    borderImage: borderImage,
+                    borderColor: frameColor.value,
+                    boxShadow: boxShadow,
+                    transform: transform
+                });
+            }
 
-      Object.assign(frame.style, {
-        borderWidth: style === 'floating' ? '0' : `${baseWidth}px`,
-        borderStyle: borderStyle,
-        borderImage: borderImage,
-        borderColor: frameColor.value,
-        boxShadow: boxShadow,
-        transform: transform
-      });
-    }
-
-    // Initial update
-    updateFrame();
-    updateMat();
-  })();
-</script>
+            // Initial update
+            updateFrame();
+            updateMat();
+        })();
+    </script>
+</body>
+</html>
